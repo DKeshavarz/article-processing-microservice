@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package article;
+
+option go_package = "./proto";
+
+message Article {
+    string title = 1;
+    string body = 2;
+}
+
+message TagsResponse {
+    repeated string tags = 1;
+}
+
+message TopTagsRequest {
+    int32 n = 1;
+}
+
+service ArticleService {
+    // Unary RPC: Process one article and extract N tags
+    rpc ExtractTags(Article) returns (TagsResponse);
+
+    // Server streaming RPC: Batch process articles concurrently
+    rpc BatchExtractTags(stream Article) returns (stream TagsResponse);
+
+    // Get top N frequent tags across all articles
+    rpc GetTopTags(TopTagsRequest) returns (TagsResponse);
+}
