@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v6.31.1
-// source: proto/article.proto
+// source: article.proto
 
 package proto
 
@@ -19,21 +19,21 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ArticleService_ExtractTags_FullMethodName      = "/article.ArticleService/ExtractTags"
-	ArticleService_BatchExtractTags_FullMethodName = "/article.ArticleService/BatchExtractTags"
-	ArticleService_GetTopTags_FullMethodName       = "/article.ArticleService/GetTopTags"
+	ArticleService_ProcessArticles_FullMethodName      = "/article.ArticleService/ProcessArticles"
+	ArticleService_ProcessSingleArticle_FullMethodName = "/article.ArticleService/ProcessSingleArticle"
+	ArticleService_GetTopTags_FullMethodName           = "/article.ArticleService/GetTopTags"
 )
 
 // ArticleServiceClient is the client API for ArticleService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArticleServiceClient interface {
-	// Unary RPC: Process one article and extract N tags
-	ExtractTags(ctx context.Context, in *Article, opts ...grpc.CallOption) (*TagsResponse, error)
-	// Server streaming RPC: Batch process articles concurrently
-	BatchExtractTags(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[Article, TagsResponse], error)
-	// Get top N frequent tags across all articles
-	GetTopTags(ctx context.Context, in *TopTagsRequest, opts ...grpc.CallOption) (*TagsResponse, error)
+	// Bidirectional streaming: client sends a stream of requests, server returns a stream of responses
+	ProcessArticles(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[ProcessArticleRequest, ProcessArticleResponse], error)
+	// Unary RPC: process a single article and return its tags
+	ProcessSingleArticle(ctx context.Context, in *ProcessArticleRequest, opts ...grpc.CallOption) (*ProcessArticleResponse, error)
+	// Unary RPC: get the top N most frequent tags across all articles
+	GetTopTags(ctx context.Context, in *GetTopTagsRequest, opts ...grpc.CallOption) (*GetTopTagsResponse, error)
 }
 
 type articleServiceClient struct {
@@ -44,32 +44,32 @@ func NewArticleServiceClient(cc grpc.ClientConnInterface) ArticleServiceClient {
 	return &articleServiceClient{cc}
 }
 
-func (c *articleServiceClient) ExtractTags(ctx context.Context, in *Article, opts ...grpc.CallOption) (*TagsResponse, error) {
+func (c *articleServiceClient) ProcessArticles(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[ProcessArticleRequest, ProcessArticleResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TagsResponse)
-	err := c.cc.Invoke(ctx, ArticleService_ExtractTags_FullMethodName, in, out, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &ArticleService_ServiceDesc.Streams[0], ArticleService_ProcessArticles_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ProcessArticleRequest, ProcessArticleResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ArticleService_ProcessArticlesClient = grpc.BidiStreamingClient[ProcessArticleRequest, ProcessArticleResponse]
+
+func (c *articleServiceClient) ProcessSingleArticle(ctx context.Context, in *ProcessArticleRequest, opts ...grpc.CallOption) (*ProcessArticleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProcessArticleResponse)
+	err := c.cc.Invoke(ctx, ArticleService_ProcessSingleArticle_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *articleServiceClient) BatchExtractTags(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[Article, TagsResponse], error) {
+func (c *articleServiceClient) GetTopTags(ctx context.Context, in *GetTopTagsRequest, opts ...grpc.CallOption) (*GetTopTagsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &ArticleService_ServiceDesc.Streams[0], ArticleService_BatchExtractTags_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[Article, TagsResponse]{ClientStream: stream}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ArticleService_BatchExtractTagsClient = grpc.BidiStreamingClient[Article, TagsResponse]
-
-func (c *articleServiceClient) GetTopTags(ctx context.Context, in *TopTagsRequest, opts ...grpc.CallOption) (*TagsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TagsResponse)
+	out := new(GetTopTagsResponse)
 	err := c.cc.Invoke(ctx, ArticleService_GetTopTags_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -81,12 +81,12 @@ func (c *articleServiceClient) GetTopTags(ctx context.Context, in *TopTagsReques
 // All implementations must embed UnimplementedArticleServiceServer
 // for forward compatibility.
 type ArticleServiceServer interface {
-	// Unary RPC: Process one article and extract N tags
-	ExtractTags(context.Context, *Article) (*TagsResponse, error)
-	// Server streaming RPC: Batch process articles concurrently
-	BatchExtractTags(grpc.BidiStreamingServer[Article, TagsResponse]) error
-	// Get top N frequent tags across all articles
-	GetTopTags(context.Context, *TopTagsRequest) (*TagsResponse, error)
+	// Bidirectional streaming: client sends a stream of requests, server returns a stream of responses
+	ProcessArticles(grpc.BidiStreamingServer[ProcessArticleRequest, ProcessArticleResponse]) error
+	// Unary RPC: process a single article and return its tags
+	ProcessSingleArticle(context.Context, *ProcessArticleRequest) (*ProcessArticleResponse, error)
+	// Unary RPC: get the top N most frequent tags across all articles
+	GetTopTags(context.Context, *GetTopTagsRequest) (*GetTopTagsResponse, error)
 	mustEmbedUnimplementedArticleServiceServer()
 }
 
@@ -97,13 +97,13 @@ type ArticleServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedArticleServiceServer struct{}
 
-func (UnimplementedArticleServiceServer) ExtractTags(context.Context, *Article) (*TagsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ExtractTags not implemented")
+func (UnimplementedArticleServiceServer) ProcessArticles(grpc.BidiStreamingServer[ProcessArticleRequest, ProcessArticleResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method ProcessArticles not implemented")
 }
-func (UnimplementedArticleServiceServer) BatchExtractTags(grpc.BidiStreamingServer[Article, TagsResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method BatchExtractTags not implemented")
+func (UnimplementedArticleServiceServer) ProcessSingleArticle(context.Context, *ProcessArticleRequest) (*ProcessArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProcessSingleArticle not implemented")
 }
-func (UnimplementedArticleServiceServer) GetTopTags(context.Context, *TopTagsRequest) (*TagsResponse, error) {
+func (UnimplementedArticleServiceServer) GetTopTags(context.Context, *GetTopTagsRequest) (*GetTopTagsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTopTags not implemented")
 }
 func (UnimplementedArticleServiceServer) mustEmbedUnimplementedArticleServiceServer() {}
@@ -127,33 +127,33 @@ func RegisterArticleServiceServer(s grpc.ServiceRegistrar, srv ArticleServiceSer
 	s.RegisterService(&ArticleService_ServiceDesc, srv)
 }
 
-func _ArticleService_ExtractTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Article)
+func _ArticleService_ProcessArticles_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ArticleServiceServer).ProcessArticles(&grpc.GenericServerStream[ProcessArticleRequest, ProcessArticleResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ArticleService_ProcessArticlesServer = grpc.BidiStreamingServer[ProcessArticleRequest, ProcessArticleResponse]
+
+func _ArticleService_ProcessSingleArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProcessArticleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArticleServiceServer).ExtractTags(ctx, in)
+		return srv.(ArticleServiceServer).ProcessSingleArticle(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ArticleService_ExtractTags_FullMethodName,
+		FullMethod: ArticleService_ProcessSingleArticle_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).ExtractTags(ctx, req.(*Article))
+		return srv.(ArticleServiceServer).ProcessSingleArticle(ctx, req.(*ProcessArticleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ArticleService_BatchExtractTags_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ArticleServiceServer).BatchExtractTags(&grpc.GenericServerStream[Article, TagsResponse]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ArticleService_BatchExtractTagsServer = grpc.BidiStreamingServer[Article, TagsResponse]
-
 func _ArticleService_GetTopTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TopTagsRequest)
+	in := new(GetTopTagsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -165,7 +165,7 @@ func _ArticleService_GetTopTags_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: ArticleService_GetTopTags_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArticleServiceServer).GetTopTags(ctx, req.(*TopTagsRequest))
+		return srv.(ArticleServiceServer).GetTopTags(ctx, req.(*GetTopTagsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -178,8 +178,8 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ArticleServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ExtractTags",
-			Handler:    _ArticleService_ExtractTags_Handler,
+			MethodName: "ProcessSingleArticle",
+			Handler:    _ArticleService_ProcessSingleArticle_Handler,
 		},
 		{
 			MethodName: "GetTopTags",
@@ -188,11 +188,11 @@ var ArticleService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "BatchExtractTags",
-			Handler:       _ArticleService_BatchExtractTags_Handler,
+			StreamName:    "ProcessArticles",
+			Handler:       _ArticleService_ProcessArticles_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
 	},
-	Metadata: "proto/article.proto",
+	Metadata: "article.proto",
 }

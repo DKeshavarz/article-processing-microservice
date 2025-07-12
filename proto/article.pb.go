@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.31.1
-// source: proto/article.proto
+// source: article.proto
 
 package proto
 
@@ -31,7 +31,7 @@ type Article struct {
 
 func (x *Article) Reset() {
 	*x = Article{}
-	mi := &file_proto_article_proto_msgTypes[0]
+	mi := &file_article_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -43,7 +43,7 @@ func (x *Article) String() string {
 func (*Article) ProtoMessage() {}
 
 func (x *Article) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_article_proto_msgTypes[0]
+	mi := &file_article_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -56,7 +56,7 @@ func (x *Article) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Article.ProtoReflect.Descriptor instead.
 func (*Article) Descriptor() ([]byte, []int) {
-	return file_proto_article_proto_rawDescGZIP(), []int{0}
+	return file_article_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Article) GetTitle() string {
@@ -73,28 +73,29 @@ func (x *Article) GetBody() string {
 	return ""
 }
 
-type TagsResponse struct {
+type ProcessArticleRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Tags          []string               `protobuf:"bytes,1,rep,name=tags,proto3" json:"tags,omitempty"`
+	Article       *Article               `protobuf:"bytes,1,opt,name=article,proto3" json:"article,omitempty"`
+	N             int32                  `protobuf:"varint,2,opt,name=n,proto3" json:"n,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *TagsResponse) Reset() {
-	*x = TagsResponse{}
-	mi := &file_proto_article_proto_msgTypes[1]
+func (x *ProcessArticleRequest) Reset() {
+	*x = ProcessArticleRequest{}
+	mi := &file_article_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *TagsResponse) String() string {
+func (x *ProcessArticleRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TagsResponse) ProtoMessage() {}
+func (*ProcessArticleRequest) ProtoMessage() {}
 
-func (x *TagsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_article_proto_msgTypes[1]
+func (x *ProcessArticleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -105,132 +106,235 @@ func (x *TagsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TagsResponse.ProtoReflect.Descriptor instead.
-func (*TagsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_article_proto_rawDescGZIP(), []int{1}
+// Deprecated: Use ProcessArticleRequest.ProtoReflect.Descriptor instead.
+func (*ProcessArticleRequest) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *TagsResponse) GetTags() []string {
+func (x *ProcessArticleRequest) GetArticle() *Article {
 	if x != nil {
-		return x.Tags
+		return x.Article
 	}
 	return nil
 }
 
-type TopTagsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	N             int32                  `protobuf:"varint,1,opt,name=n,proto3" json:"n,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *TopTagsRequest) Reset() {
-	*x = TopTagsRequest{}
-	mi := &file_proto_article_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *TopTagsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TopTagsRequest) ProtoMessage() {}
-
-func (x *TopTagsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_article_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use TopTagsRequest.ProtoReflect.Descriptor instead.
-func (*TopTagsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_article_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *TopTagsRequest) GetN() int32 {
+func (x *ProcessArticleRequest) GetN() int32 {
 	if x != nil {
 		return x.N
 	}
 	return 0
 }
 
-var File_proto_article_proto protoreflect.FileDescriptor
+type ProcessArticleResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tags          []string               `protobuf:"bytes,1,rep,name=tags,proto3" json:"tags,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
 
-const file_proto_article_proto_rawDesc = "" +
+func (x *ProcessArticleResponse) Reset() {
+	*x = ProcessArticleResponse{}
+	mi := &file_article_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProcessArticleResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProcessArticleResponse) ProtoMessage() {}
+
+func (x *ProcessArticleResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProcessArticleResponse.ProtoReflect.Descriptor instead.
+func (*ProcessArticleResponse) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ProcessArticleResponse) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+type GetTopTagsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	N             int32                  `protobuf:"varint,1,opt,name=n,proto3" json:"n,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTopTagsRequest) Reset() {
+	*x = GetTopTagsRequest{}
+	mi := &file_article_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTopTagsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTopTagsRequest) ProtoMessage() {}
+
+func (x *GetTopTagsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTopTagsRequest.ProtoReflect.Descriptor instead.
+func (*GetTopTagsRequest) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetTopTagsRequest) GetN() int32 {
+	if x != nil {
+		return x.N
+	}
+	return 0
+}
+
+type GetTopTagsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tags          []string               `protobuf:"bytes,1,rep,name=tags,proto3" json:"tags,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTopTagsResponse) Reset() {
+	*x = GetTopTagsResponse{}
+	mi := &file_article_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTopTagsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTopTagsResponse) ProtoMessage() {}
+
+func (x *GetTopTagsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTopTagsResponse.ProtoReflect.Descriptor instead.
+func (*GetTopTagsResponse) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetTopTagsResponse) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+var File_article_proto protoreflect.FileDescriptor
+
+const file_article_proto_rawDesc = "" +
 	"\n" +
-	"\x13proto/article.proto\x12\aarticle\"3\n" +
+	"\rarticle.proto\x12\aarticle\"3\n" +
 	"\aArticle\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x12\n" +
-	"\x04body\x18\x02 \x01(\tR\x04body\"\"\n" +
-	"\fTagsResponse\x12\x12\n" +
-	"\x04tags\x18\x01 \x03(\tR\x04tags\"\x1e\n" +
-	"\x0eTopTagsRequest\x12\f\n" +
-	"\x01n\x18\x01 \x01(\x05R\x01n2\xc7\x01\n" +
-	"\x0eArticleService\x126\n" +
-	"\vExtractTags\x12\x10.article.Article\x1a\x15.article.TagsResponse\x12?\n" +
-	"\x10BatchExtractTags\x12\x10.article.Article\x1a\x15.article.TagsResponse(\x010\x01\x12<\n" +
+	"\x04body\x18\x02 \x01(\tR\x04body\"Q\n" +
+	"\x15ProcessArticleRequest\x12*\n" +
+	"\aarticle\x18\x01 \x01(\v2\x10.article.ArticleR\aarticle\x12\f\n" +
+	"\x01n\x18\x02 \x01(\x05R\x01n\",\n" +
+	"\x16ProcessArticleResponse\x12\x12\n" +
+	"\x04tags\x18\x01 \x03(\tR\x04tags\"!\n" +
+	"\x11GetTopTagsRequest\x12\f\n" +
+	"\x01n\x18\x01 \x01(\x05R\x01n\"(\n" +
+	"\x12GetTopTagsResponse\x12\x12\n" +
+	"\x04tags\x18\x01 \x03(\tR\x04tags2\x88\x02\n" +
+	"\x0eArticleService\x12V\n" +
+	"\x0fProcessArticles\x12\x1e.article.ProcessArticleRequest\x1a\x1f.article.ProcessArticleResponse(\x010\x01\x12W\n" +
+	"\x14ProcessSingleArticle\x12\x1e.article.ProcessArticleRequest\x1a\x1f.article.ProcessArticleResponse\x12E\n" +
 	"\n" +
-	"GetTopTags\x12\x17.article.TopTagsRequest\x1a\x15.article.TagsResponseB\tZ\a./protob\x06proto3"
+	"GetTopTags\x12\x1a.article.GetTopTagsRequest\x1a\x1b.article.GetTopTagsResponseB\tZ\a./protob\x06proto3"
 
 var (
-	file_proto_article_proto_rawDescOnce sync.Once
-	file_proto_article_proto_rawDescData []byte
+	file_article_proto_rawDescOnce sync.Once
+	file_article_proto_rawDescData []byte
 )
 
-func file_proto_article_proto_rawDescGZIP() []byte {
-	file_proto_article_proto_rawDescOnce.Do(func() {
-		file_proto_article_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_article_proto_rawDesc), len(file_proto_article_proto_rawDesc)))
+func file_article_proto_rawDescGZIP() []byte {
+	file_article_proto_rawDescOnce.Do(func() {
+		file_article_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_article_proto_rawDesc), len(file_article_proto_rawDesc)))
 	})
-	return file_proto_article_proto_rawDescData
+	return file_article_proto_rawDescData
 }
 
-var file_proto_article_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_proto_article_proto_goTypes = []any{
-	(*Article)(nil),        // 0: article.Article
-	(*TagsResponse)(nil),   // 1: article.TagsResponse
-	(*TopTagsRequest)(nil), // 2: article.TopTagsRequest
+var file_article_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_article_proto_goTypes = []any{
+	(*Article)(nil),                // 0: article.Article
+	(*ProcessArticleRequest)(nil),  // 1: article.ProcessArticleRequest
+	(*ProcessArticleResponse)(nil), // 2: article.ProcessArticleResponse
+	(*GetTopTagsRequest)(nil),      // 3: article.GetTopTagsRequest
+	(*GetTopTagsResponse)(nil),     // 4: article.GetTopTagsResponse
 }
-var file_proto_article_proto_depIdxs = []int32{
-	0, // 0: article.ArticleService.ExtractTags:input_type -> article.Article
-	0, // 1: article.ArticleService.BatchExtractTags:input_type -> article.Article
-	2, // 2: article.ArticleService.GetTopTags:input_type -> article.TopTagsRequest
-	1, // 3: article.ArticleService.ExtractTags:output_type -> article.TagsResponse
-	1, // 4: article.ArticleService.BatchExtractTags:output_type -> article.TagsResponse
-	1, // 5: article.ArticleService.GetTopTags:output_type -> article.TagsResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+var file_article_proto_depIdxs = []int32{
+	0, // 0: article.ProcessArticleRequest.article:type_name -> article.Article
+	1, // 1: article.ArticleService.ProcessArticles:input_type -> article.ProcessArticleRequest
+	1, // 2: article.ArticleService.ProcessSingleArticle:input_type -> article.ProcessArticleRequest
+	3, // 3: article.ArticleService.GetTopTags:input_type -> article.GetTopTagsRequest
+	2, // 4: article.ArticleService.ProcessArticles:output_type -> article.ProcessArticleResponse
+	2, // 5: article.ArticleService.ProcessSingleArticle:output_type -> article.ProcessArticleResponse
+	4, // 6: article.ArticleService.GetTopTags:output_type -> article.GetTopTagsResponse
+	4, // [4:7] is the sub-list for method output_type
+	1, // [1:4] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_proto_article_proto_init() }
-func file_proto_article_proto_init() {
-	if File_proto_article_proto != nil {
+func init() { file_article_proto_init() }
+func file_article_proto_init() {
+	if File_article_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_article_proto_rawDesc), len(file_proto_article_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_article_proto_rawDesc), len(file_article_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_article_proto_goTypes,
-		DependencyIndexes: file_proto_article_proto_depIdxs,
-		MessageInfos:      file_proto_article_proto_msgTypes,
+		GoTypes:           file_article_proto_goTypes,
+		DependencyIndexes: file_article_proto_depIdxs,
+		MessageInfos:      file_article_proto_msgTypes,
 	}.Build()
-	File_proto_article_proto = out.File
-	file_proto_article_proto_goTypes = nil
-	file_proto_article_proto_depIdxs = nil
+	File_article_proto = out.File
+	file_article_proto_goTypes = nil
+	file_article_proto_depIdxs = nil
 }

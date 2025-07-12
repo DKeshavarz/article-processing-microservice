@@ -5,25 +5,34 @@ package article;
 option go_package = "./proto";
 
 message Article {
-    string title = 1;
-    string body = 2;
+  string title = 1;
+  string body = 2;
 }
 
-message TagsResponse {
-    repeated string tags = 1;
+message ProcessArticleRequest {
+  Article article = 1;
+  int32 n = 2;
 }
 
-message TopTagsRequest {
-    int32 n = 1;
+message ProcessArticleResponse {
+  repeated string tags = 1;
+}
+
+message GetTopTagsRequest {
+  int32 n = 1;
+}
+
+message GetTopTagsResponse {
+  repeated string tags = 1;
 }
 
 service ArticleService {
-    // Unary RPC: Process one article and extract N tags
-    rpc ExtractTags(Article) returns (TagsResponse);
+  // Bidirectional streaming: client sends a stream of requests, server returns a stream of responses
+  rpc ProcessArticles(stream ProcessArticleRequest) returns (stream ProcessArticleResponse);
 
-    // Server streaming RPC: Batch process articles concurrently
-    rpc BatchExtractTags(stream Article) returns (stream TagsResponse);
-
-    // Get top N frequent tags across all articles
-    rpc GetTopTags(TopTagsRequest) returns (TagsResponse);
+  // Unary RPC: process a single article and return its tags
+  rpc ProcessSingleArticle(ProcessArticleRequest) returns (ProcessArticleResponse);
+  
+  // Unary RPC: get the top N most frequent tags across all articles
+  rpc GetTopTags(GetTopTagsRequest) returns (GetTopTagsResponse);
 }
