@@ -28,7 +28,7 @@ func (s *ArticleServer) ProcessSingleArticle(ctx context.Context, req *proto.Pro
 		return nil, err
 	}
 
-	// Store article in MongoDB
+
 	article := &database.Article{
 		Title: req.Article.Title,
 		Body:  req.Article.Body,
@@ -37,7 +37,6 @@ func (s *ArticleServer) ProcessSingleArticle(ctx context.Context, req *proto.Pro
 
 	if err := database.StoreArticle(article); err != nil {
 		log.Printf("Error storing article in database: %v", err)
-		// Continue processing even if storage fails
 	}
 
 	return &proto.ProcessArticleResponse{Tags: tags}, nil
@@ -81,7 +80,6 @@ func (s *ArticleServer) ProcessArticles(stream proto.ArticleService_ProcessArtic
 	}
 }
 
-// GetTopTags retrieves the top N most frequent tags from MongoDB
 func (s *ArticleServer) GetTopTags(ctx context.Context, req *proto.GetTopTagsRequest) (*proto.GetTopTagsResponse, error) {
 	log.Printf("Getting top %d tags from database", req.N)
 

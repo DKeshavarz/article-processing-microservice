@@ -10,7 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-
 type Article struct {
 	Title     string    `bson:"title"`
 	Tags      []string  `bson:"tags"`
@@ -18,12 +17,10 @@ type Article struct {
 	CreatedAt time.Time `bson:"created_at"`
 }
 
-
 var (
 	client     *mongo.Client
 	collection *mongo.Collection
 )
-
 
 func ConnectToMongoDB() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -69,7 +66,6 @@ func StoreArticle(article *Article) error {
 	return nil
 }
 
-
 func GetTopTags(n int) ([]string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -101,7 +97,6 @@ func GetTopTags(n int) ([]string, error) {
 		return nil, err
 	}
 
-	
 	var topTags []string
 	for _, result := range results {
 		if tag, ok := result["_id"].(string); ok {
@@ -112,7 +107,6 @@ func GetTopTags(n int) ([]string, error) {
 	log.Printf("Retrieved top %d tags: %v", n, topTags)
 	return topTags, nil
 }
-
 
 func GetAllArticles() ([]Article, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -135,7 +129,6 @@ func GetAllArticles() ([]Article, error) {
 	return articles, nil
 }
 
-
 func GetArticleByTitle(title string) (*Article, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -153,4 +146,4 @@ func GetArticleByTitle(title string) (*Article, error) {
 
 	log.Printf("Retrieved article: %s", title)
 	return &article, nil
-} 
+}
