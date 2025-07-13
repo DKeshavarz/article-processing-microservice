@@ -102,10 +102,51 @@ See `proto/article.proto` for full API details.
 
 ---
 
+## Testing the API
+
+### Using BloomRPC
+
+[BloomRPC](https://github.com/bloomrpc/bloomrpc) is a great GUI client for testing gRPC APIs.
+
+1. **Install BloomRPC:**
+   - **macOS**: `brew install --cask bloomrpc`
+   - **Linux**: Download from [GitHub releases](https://github.com/bloomrpc/bloomrpc/releases)
+   - **Windows**: Download from [GitHub releases](https://github.com/bloomrpc/bloomrpc/releases)
+
+2. **Open BloomRPC and create a new request:**
+   - Click "New Request"
+   - Set **Host** to `localhost:50051`
+   - Import your proto file: `proto/article.proto`
+
+3. **Test the API:**
+   - **ProcessSingleArticle**: Send a request with article title, body, and N (number of tags)
+   - **GetTopTags**: Send a request with N (number of top tags to retrieve)
+   - **ProcessArticles**: Use for bidirectional streaming (more complex)
+
+### Example Request (ProcessSingleArticle)
+
+```json
+{
+  "article": {
+    "title": "Machine Learning in Go",
+    "body": "Machine learning is a subset of artificial intelligence. Go programming language is excellent for building scalable systems."
+  },
+  "n": 5
+}
+```
+
+### Alternative Testing Tools
+
+- **[grpcurl](https://github.com/fullstorydev/grpcurl)**: Command-line gRPC client
+- **[Postman](https://www.postman.com/)**: Has gRPC support
+- **[Insomnia](https://insomnia.rest/)**: REST and gRPC client
+
+---
+
 ## Configuration
 
 - **MongoDB URI**: The app reads the `MONGODB_URI` environment variable.  
-  - In Docker Compose, it’s set to `mongodb://mongoDp:27017`
+  - In Docker Compose, it's set to `mongodb://mongoDp:27017`
   - Locally, defaults to `mongodb://localhost:27017`
 
 ---
